@@ -1,0 +1,99 @@
+html, body {
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  font-family: Arial;
+}
+
+body {
+  background: #842a96;
+  background: -webkit-linear-gradient(160deg, rgba(132, 42, 150, 1) 0%, rgba(67, 24, 168, 1) 25%, rgba(30, 30, 31, 1) 100%);
+  background: -moz-linear-gradient(160deg, rgba(132, 42, 150, 1) 0%, rgba(67, 24, 168, 1) 25%, rgba(30, 30, 31, 1) 100%);
+  background: linear-gradient(160deg, rgba(132, 42, 150, 1) 0%, rgba(67, 24, 168, 1) 25%, rgba(30, 30, 31, 1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#842A96", endColorstr="#1E1E1F", GradientType=0);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.module {
+  width: 128px;
+  height: 128px;
+  border: 3px solid #777777;
+  color: white;
+  cursor: pointer;
+  transition: background .2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  position: relative;
+}
+
+.module:hover {
+  background: #777777;
+}
+
+.module i {
+  font-size: 40px;
+  transition: transform .2s ease-in-out;
+  position: absolute;
+  top: 20px;
+}
+
+.module:hover i {
+  transform: scale(1.2);
+}
+
+.module p {
+  font-size: 17px;
+  position: absolute;
+  top: 57px;
+}
+
+#back {
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  cursor: pointer;
+}
+
+select, input[type=text], textarea, button {
+  padding: 8px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 2px solid black;
+}
+
+button {
+  cursor: pointer;
+}
+
+.blockselect {
+  padding: 8px;
+  background-color: #777777;
+  color: white;
+  display: inline-block;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.blockselect.selected {
+  background-color: #434343;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
