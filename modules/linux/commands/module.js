@@ -16,6 +16,14 @@
     </div>
     <br />
     <br />
+    <div>
+      <h2 style="color: white;">Очистка Docker образов</h2>
+      <textarea placeholder="Команда" readonly>docker image prune -f</textarea>
+      <br><br>
+      <button data-call="copy">Копировать</button>
+    </div>
+    <br />
+    <br />
   `,
   "copy": (_, event) => {
     navigator.clipboard.writeText(event.target.parentElement.querySelector("textarea").value);
