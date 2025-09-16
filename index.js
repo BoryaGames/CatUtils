@@ -67,11 +67,7 @@ function render() {
   currentElement = getCurrentElement();
   if (currentElement.type == "file") {
     document.querySelector("#modules").innerHTML = `<img src="back.png" width="64px" height="64px" id="back" onclick="back();" draggable="false"><br><br><br><br><br>${currentElement.content}`;
-    Array.from(document.querySelectorAll("img, button, div, span, code")).filter(btn => btn.dataset.call).forEach(btn => {
-      btn.addEventListener("click", event => {
-        currentElement[btn.dataset.call](getProxy(), event);
-      });
-    });
+    updateCalls();
     if (currentElement._interval) {
       currentInterval = setInterval(currentElement._interval, 10, getProxy());
     }
@@ -116,4 +112,65 @@ function splitArray(array, chunkSize) {
   return [...Array(numberOfChunks)].map((value, index) => {
     return array.slice(index * chunkSize, (index + 1) * chunkSize);
   });
+}
+
+function updateCalls() {
+  Array.from(document.querySelectorAll("img, input, button, div, span, code")).forEach(btn => {
+    if (btn.dataset.call) {
+      btn.onclick = event => {
+        currentElement[btn.dataset.call](getProxy(), event);
+      };
+    }
+    if (btn.dataset.change) {
+      btn.onchange = event => {
+        currentElement[btn.dataset.change](getProxy(), event);
+      };
+    }
+    if (btn.dataset.dragenter) {
+      btn.ondragenter = event => {
+        currentElement[btn.dataset.dragenter](getProxy(), event);
+      };
+    }
+    if (btn.dataset.dragover) {
+      btn.ondragover = event => {
+        currentElement[btn.dataset.dragover](getProxy(), event);
+      };
+    }
+    if (btn.dataset.dragleave) {
+      btn.ondragleave = event => {
+        currentElement[btn.dataset.dragleave](getProxy(), event);
+      };
+    }
+    if (btn.dataset.drop) {
+      btn.ondrop = event => {
+        currentElement[btn.dataset.drop](getProxy(), event);
+      };
+    }
+  });
+}
+
+function findBytePattern(haystack, needle, startIndex = 0) {
+  if (needle.length === 0) {
+    return startIndex;
+  }
+  if (needle.length > haystack.length - startIndex) {
+    return -1;
+  } 
+  for (var i = startIndex; i <= haystack.length - needle.length; i++) {
+    var found = true;
+    for (var j = 0; j < needle[0].length; j++) {
+      if (haystack[i + j] !== needle[0][j] && !needle[1].includes(j)) {
+        found = false;
+        break;
+      }
+    }
+    if (found) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function parseHEX(hex) {
+  return [new Uint8Array(hex.split(" ").map(byte => (byte == "??") ? 0 : parseInt(byte, 16))), hex.split(" ").map((byte, index) => (byte == "??") ? index : null).filter(byte => byte)];
 }
