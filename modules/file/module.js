@@ -74,9 +74,109 @@
     "magic": parseHEX("FF D8 FF E0"),
     "offset": 0
   }, {
-    "name": "EXE / DLL / SYS / EFI",
+    "name": "EXE / DLL / SYS / EFI (выполняемый PE-код %%%%)",
     "magic": parseHEX("4D 5A"),
-    "offset": 0
+    "offset": 0,
+    "extra": (fileObject, result) => {
+      return new Promise(res => {
+        var view = new DataView(result.buffer);
+        // Адрес PE заголовка
+        var headerPointer = view.getUint32(60, true);
+        var fr = new FileReader();
+        fr.onload = () => {
+          if (fr.readyState == 2) {
+            var headerView = new DataView(fr.result);
+            // Архитектура
+            var targetArch = headerView.getUint16(4, true);
+            var arches = {
+              0x184: "Alpha32",
+              0x284: "Alpha64",
+              0x1D3: "Matsushita AM33",
+              0x8664: "Intel x86-64",
+              0x1C0: "ARM",
+              0xAA64: "ARM-64",
+              0x1C4: "ARM Thumb2",
+              0xEBC: "EFI",
+              0x14C: "Intel x86",
+              0x200: "Intel Itanium",
+              0x6232: "LoongArch 32-бит",
+              0x6264: "LoongArch 64-бит",
+              0x9041: "Mitsubishi M32R",
+              0x266: "MIPS16",
+              0x366: "MIPS с FPU",
+              0x466: "MIPS16 с FPU",
+              0x1F0: "PowerPC",
+              0x1F1: "PowerPC с FPU",
+              0x5032: "RISC-V 32-бит",
+              0x5064: "RISC-V 64-бит",
+              0x5128: "RISC-V 128-бит",
+              0x1A2: "Hitachi SH3",
+              0x1A3: "Hitachi SH3 DSP",
+              0x1A6: "Hitachi SH4",
+              0x1A8: "Hitachi SH5",
+              0x1C2: "Thumb",
+              0x169: "MIPS WCEv2"
+            };
+            targetArch = (arches[targetArch] || "неизвестной архитектуры");
+            // Количество секций
+            var sectionsCount = headerView.getUint16(6, true);
+            // Адрес начала секций = размер необязательной части заголовка + 24
+            var sectionsStart = headerView.getUint16(20, true) + 24;
+            // Смотрим все секции для поиска ресурсов
+            var resources = [];
+            for (var i = 0; i < sectionsCount; i++) {
+              // Адрес начала текущий секции
+              var sectionOffset = sectionsStart + (i * 40);
+              var sectionName = "";
+              // Название секции
+              for (var j = 0; j < 8; j++) {
+                var char = headerView.getUint8(sectionOffset + j);
+                if (char === 0) {
+                  break;
+                }
+                sectionName += String.fromCharCode(char);
+              }
+              if (sectionName.includes(".rsrc") || sectionName.includes("rsrc")) {
+                // Секция ресурсов найдена, сохраняем адрес и размер
+                resources.push([headerView.getUint32(sectionOffset + 20, true), headerView.getUint32(sectionOffset + 16, true)]);
+              }
+            }
+            // Просматриваем все ресурсы на файлы внутри
+            for (var resource of resources) {
+              var fr2 = new FileReader();
+              fr2.onload = async () => {
+                if (fr2.readyState == 2) {
+                  // Нужно проверить волшебные числа ещё и здесь
+                  var matched = [];
+                  var resourceData = new Uint8Array(fr2.result);
+                  for (var type of currentElement.types) {
+                    if (!type.allowedDeepScan) {
+                      continue;
+                    }
+                    var foundOffset = findBytePattern(resourceData, type.magic);
+                    if (foundOffset < 0) {
+                      continue;
+                    }
+                    var args = [];
+                    if (type.extra) {
+                      args = await type.extra(fileObject, resourceData.slice(foundOffset));
+                      if (!Array.isArray(args)) {
+                        args = [args];
+                      }
+                    }
+                    var argIndex = -1;
+                    matched.push(type.name.replaceAll("%%", () => args[++argIndex]));
+                  }
+                  res([targetArch, matched.length ? `, содержит ${matched.join("; ")}` : ""]);
+                }
+              };
+              fr2.readAsArrayBuffer(fileObject.slice(resource[0], resource[0] + resource[1]));
+            }
+          }
+        };
+        fr.readAsArrayBuffer(fileObject.slice(headerPointer, headerPointer + 1024));
+      });
+    }
   }, {
     "name": "EXE",
     "magic": parseHEX("5A 4D"),
@@ -398,6 +498,16 @@
     "magic": parseHEX("4F 54 54 4F"),
     "offset": 0
   }, {
+    "name": "WIM (архив образа Windows размером в %%)",
+    "magic": parseHEX("4D 53 57 49 4D 00 00 00"),
+    "offset": 0,
+    "allowedDeepScan": true,
+    "extra": (_, result) => {
+      var view = new DataView(result.buffer);
+      // Читаем размер WIM
+      return currentElement.renderSize(view.getUint32(56, true));
+    }
+  }, {
     "name": "ACCDB (база данных Microsoft Access 2007)",
     "magic": parseHEX("00 01 00 00 53 74 61 6E 64 61 72 64 20 41 43 45 20 44 42"),
     "offset": 0
@@ -425,25 +535,41 @@
     "name": "База данных DuckDB",
     "magic": parseHEX("44 55 43 4B"),
     "offset": 8
+  }, {
+    "name": "IMG (Загрузочный образ Android)",
+    "magic": parseHEX("41 4E 44 52 4F 49 44 21"),
+    "offset": 0
+  }, {
+    "name": "Образ Android Sparse",
+    "magic": parseHEX("3A FF 26 ED"),
+    "offset": 0
   }],
   "scan": ({ file, content }) => {
     var fileObject = file.files[0];
     var fr = new FileReader;
     var matched = [];
-    fr.onload = () => {
+    fr.onload = async () => {
       if (fr.readyState == 2) {
         var result = new Uint8Array(fr.result);
-        console.log(result);
         for (var type of currentElement.types) {
-          if (findBytePattern(result, type.magic) != type.offset) {
+          var foundOffset = findBytePattern(result, type.magic);
+          if (foundOffset != type.offset && (foundOffset < 0 || !isNaN(type.offset))) {
             continue;
           }
-          matched.push(type.name);
+          var args = [];
+          if (type.extra) {
+            args = await type.extra(fileObject, result);
+            if (!Array.isArray(args)) {
+              args = [args];
+            }
+          }
+          var argIndex = -1;
+          matched.push(type.name.replaceAll("%%", () => args[++argIndex]));
         }
         if (!matched.length) {
           matched = ["Неизвестный файл"];
         }
-        content.innerHTML = `<h2 style="color: white;"><i class="fa-solid fa-file"></i> ${fileObject.name}</h2><h3 style="color: white;">${currentElement.renderSize(fileObject.size)}</h3><h3 style="color: white;">${matched.join(", ")}</h3>`;
+        content.innerHTML = `<h2 style="color: white;"><i class="fa-solid fa-file"></i> ${fileObject.name}</h2><h3 style="color: white;">${currentElement.renderSize(fileObject.size)}</h3><h3 style="color: white;">${matched.join("; ")}</h3>`;
       }
     };
     fr.readAsArrayBuffer(fileObject.slice(0, 1024));
