@@ -1,13 +1,13 @@
 {
-  "name": "new",
-  "version": "1.0.0",
-  "description": "",
+  "name": "CatUtils",
+  "version": "0.0.1",
+  "description": "Полезные веб-инструменты в одном месте и без сервера. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node build.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "topcatto",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
