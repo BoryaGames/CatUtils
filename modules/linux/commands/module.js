@@ -24,6 +24,14 @@
     </div>
     <br />
     <br />
+    <div>
+      <h2 style="color: white;">Получить IP для аллокаций Pterodactyl</h2>
+      <textarea placeholder="Команда" readonly>hostname -I | awk '{print $1}'</textarea>
+      <br><br>
+      <button data-call="copy">Копировать</button>
+    </div>
+    <br />
+    <br />
   `,
   "copy": (_, event) => {
     navigator.clipboard.writeText(event.target.parentElement.querySelector("textarea").value);

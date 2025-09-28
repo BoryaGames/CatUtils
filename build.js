@@ -48,7 +48,8 @@ var code = `${fs.readFileSync("index.js").toString("utf-8").replace("{}; // @bui
 
 // Минификация кода
 var minified = babel.transformSync(code, {
-  "presets": ["minify"]
+  "presets": ["minify"],
+  "comments": false
 });
 
 // Создание bundle.min.js
