@@ -264,17 +264,17 @@
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": "Архив (ZIP / APK / DOCX / EPUB / IPA / JAR / MSIX / PPTX / XLSX / WHL)",
+    "name": (...args) => currentElement.parseZip(...args),
     "magic": parseHEX("50 4B 03 04"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": "Архив (ZIP / APK / DOCX / EPUB / IPA / JAR / MSIX / PPTX / XLSX / WHL)",
+    "name": (...args) => currentElement.parseZip(...args),
     "magic": parseHEX("50 4B 05 06"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": "Архив (ZIP / APK / DOCX / EPUB / IPA / JAR / MSIX / PPTX / XLSX / WHL)",
+    "name": (...args) => currentElement.parseZip(...args),
     "magic": parseHEX("50 4B 07 08"),
     "offset": 0,
     "allowedDeepScan": false
@@ -693,6 +693,7 @@
     if (!fileObject) {
       return;
     }
+    content.innerHTML = `<h1 style="color: white;">Сканирование...</h1>`;
     var fr = new FileReader;
     var matched = [];
     fr.onload = async () => {
@@ -742,5 +743,74 @@
     link.download = `comet_installer_latest.exe_cert${id + 1}.p7b`;
     link.click();
     URL.revokeObjectURL(url);
+  },
+  "parseZip": (fileObject, _, tabLevel, detailedScan) => {
+    if (!detailedScan) {
+      return {
+        "name": "Архив (ZIP)",
+        "wantsDetailedScan": true
+      };
+    }
+    return new Promise(res => {
+      var fr = new FileReader();
+      fr.onload = async () => {
+        if (fr.readyState == 2) {
+          var zip = await JSZip.loadAsync(fr.result);
+          console.log(zip);
+          var result = "Архив (ZIP)";
+          if (zip.files["AndroidManifest.xml"] && zip.files["classes.dex"]) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Android (APK)`;
+          }
+          if (zip.files["manifest.json"]) {
+            try {
+              var manifest = JSON.parse(await zip.files["manifest.json"].async("string"));
+              if (manifest.xapk_version) {
+                result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Android (XAPK)`;
+              }
+            } catch {}
+          }
+          if (zip.files["META-INF/MANIFEST.MF"] && !zip.files["AndroidManifest.xml"]) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Java (JAR)`;
+            if (zip.files["META-INF/mods.toml"]) {
+              result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Forge)`;
+            }
+            if (zip.files["fabric.mod.json"]) {
+              result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Fabric)`;
+            }
+          }
+          if (zip.files["[Content_Types].xml"] && zip.files["word"] && zip.files["_rels"]) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft Word (DOCX)`;
+          }
+          if (zip.files["[Content_Types].xml"] && zip.files["xl"]) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft Excel (XLSX)`;
+          }
+          if (zip.files["[Content_Types].xml"] && zip.files["ppt"]) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft PowerPoint (PPTX)`;
+          }
+          if (zip.files["[Content_Types].xml"] && zip.files["AppxManifest.xml"]) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является UWP-приложением Windows (APPX)`;
+          }
+          if (zip.files["[Content_Types].xml"] && zip.files["AppxMetadata/AppxBundleManifest.xml"]) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является пакетом UWP-приложений Windows (MSIXBUNDLE)`;
+          }
+          if (zip.files["mimetype"]) {
+            try {
+              var mimetype = await zip.files["mimetype"].async("string");
+              if (mimetype == "application/epub+zip") {
+                result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является книгой (EPUB)`;
+              }
+            } catch {}
+          }
+          if (zip.files["Payload"]) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением iOS (IPA)`;
+          }
+          if (Object.keys(zip.files).find(file => file.endsWith(".dist-info"))) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является модулем Python (WHL)`;
+          }
+          res(result);
+        }
+      };
+      fr.readAsArrayBuffer(fileObject);
+    });
   }
 })

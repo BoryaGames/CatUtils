@@ -115,7 +115,7 @@ function splitArray(array, chunkSize) {
 }
 
 function updateCalls() {
-  Array.from(document.querySelectorAll("img, input, button, div, span, code")).forEach(btn => {
+  Array.from(document.querySelectorAll("img, input, button, div, span, i, code")).forEach(btn => {
     if (btn.dataset.call) {
       btn.onclick = event => {
         currentElement[btn.dataset.call](getProxy(), event);
@@ -173,4 +173,111 @@ function findBytePattern(haystack, needle, startIndex = 0) {
 
 function parseHEX(hex) {
   return [new Uint8Array(hex.split(" ").map(byte => (byte == "??") ? 0 : parseInt(byte, 16))), hex.split(" ").map((byte, index) => (byte == "??") ? index : null).filter(byte => byte)];
+}
+
+function getVersion(condition, versions) {
+  function parseVersion(version) {
+    var mainMatch = version.match(/^([0-9]+(?:\.[0-9]+)*(?:\.[0-9A-Za-z-]+)*)/);
+    if (!mainMatch) {
+      return {
+        "main": [],
+        "preRelease": null,
+        "build": null
+      };
+    }
+    var mainPart = mainMatch[1];
+    var rest = version.slice(mainMatch[0].length);
+    var preRelease = null;
+    var build = null;
+    if (rest.startsWith("+")) {
+      build = rest.slice(1);
+    } else if (rest.startsWith("-")) {
+      var dashPlus = rest.indexOf("+");
+      if (dashPlus !== -1) {
+        preRelease = rest.slice(1, dashPlus);
+        build = rest.slice(dashPlus + 1);
+      } else {
+        preRelease = rest.slice(1);
+      }
+    }
+    var mainParts = mainPart.split(".").map(part => {
+      var num = parseInt(part, 10);
+      return isNaN(num) ? part : num;
+    });
+    var preReleaseParts = preRelease ? preRelease.split(".").map(part => {
+      var num = parseInt(part, 10);
+      return isNaN(num) ? part : num;
+    }) : null;
+    return {
+      "main": mainParts,
+      "preRelease": preReleaseParts,
+      "build": build
+    };
+  }
+  function compareParts(a, b) {
+    const maxLength = Math.max(a.length, b.length);
+    for (let i = 0; i < maxLength; i++) {
+      const partA = i < a.length ? a[i] : 0;
+      const partB = i < b.length ? b[i] : 0;
+      if (typeof partA === "number" && typeof partB === "number") {
+        if (partA !== partB) {
+          return partA - partB;
+        }
+      } else if (typeof partA === "number" && typeof partB === "string") {
+        return -1;
+      } else if (typeof partA === "string" && typeof partB === "number") {
+        return 1;
+      } else {
+        var strA = String(partA);
+        var strB = String(partB);
+        if (strA < strB) {
+          return -1;
+        }
+        if (strA > strB) {
+          return 1;
+        }
+      }
+    }
+    return 0;
+  }
+  function compareVersions(a, b) {
+    var parsedA = parseVersion(a);
+    var parsedB = parseVersion(b);
+    var mainCompare = compareParts(parsedA.main, parsedB.main);
+    if (mainCompare !== 0) {
+      return mainCompare;
+    }
+    if (!parsedA.preRelease && parsedB.preRelease) {
+      return 1;
+    }
+    if (parsedA.preRelease && !parsedB.preRelease) {
+      return -1;
+    }
+    if (parsedA.preRelease && parsedB.preRelease) {
+      return compareParts(parsedA.preRelease, parsedB.preRelease);
+    }
+    return 0;
+  }
+  function matchesCondition(version, condition) {
+    var versionParts = version.split(".");
+    var conditionParts = condition.split(".");
+    for (var i = 0; i < conditionParts.length; i++) {
+      if (i >= versionParts.length) {
+        return false;
+      }
+      if (versionParts[i] !== conditionParts[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+  var matchingVersions = versions.filter(v => matchesCondition(v, condition));
+  if (matchingVersions.length === 0) {
+    return null;
+  }
+  return matchingVersions.sort((a, b) => compareVersions(b, a))[0];
+}
+
+function sanitizeHTML(text) {
+  return text.split("<").join("&lt;").split(">").join("&gt;");
 }
