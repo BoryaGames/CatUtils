@@ -10,7 +10,7 @@
     output.innerHTML = "Загрузка...";
     var result = await fetch(`https://registry.npmjs.com/${packageName.value}`).then(res => res.json());
     currentElement.packageData = result;
-    output.innerHTML = `<h1>${result.name}</h1><h4>${result.description || ""}</h4><div style="width: 40%;">${result.keywords.map(keyword => `<span class="blockselect" style="margin: 2px; cursor: auto;">${keyword}</span>`).join("")}</div><br /><br /><input type="text" placeholder="Условие версии..." id="versionCondition" value="latest"><br /><p id="version"></p>`;
+    output.innerHTML = `<h1>${result.name}</h1><h4>${result.description || ""}</h4><div style="width: 40%;">${(result.keywords || []).map(keyword => `<span class="blockselect" style="margin: 2px; cursor: auto;">${keyword}</span>`).join("")}</div><br /><br /><input type="text" placeholder="Условие версии..." id="versionCondition" value="latest"><br /><p id="version"></p>`;
     updateCalls();
     currentElement._update(getProxy());
   },
@@ -29,4 +29,5 @@
   "copyVersion": () => {
     navigator.clipboard.writeText(`"${currentElement.packageData.name}": "^${currentElement.version}"`);
   }
+
 })
