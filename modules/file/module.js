@@ -249,6 +249,8 @@
             };
             if (dataDirectories.length > 4 && dataDirectories[4][0] && dataDirectories[4][1]) {
               fr2.readAsArrayBuffer(fileObject.slice(dataDirectories[4][0], dataDirectories[4][0] + dataDirectories[4][1]));
+            } else {
+              res(`Исполняемый PE-код (${types})<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Для архитектуры ${targetArch}${creationTimestamp ? `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Был скомпилирован ${(new Date(creationTimestamp * 1e3)).toLocaleString()}` : ""}`);
             }
           }
         };
@@ -813,4 +815,5 @@
       fr.readAsArrayBuffer(fileObject);
     });
   }
+
 })
