@@ -683,7 +683,7 @@
     "name": (_, result, tabLevel) => {
       var view = new DataView(result.buffer);
       // Читаем количество разделов
-      var partitionsCount = view.getUint32(4);
+      var partitionsCount = view.getUint32(4, true);
       // Читаем цель (Project Name)
       var target = "";
       for (var j = 0; j < 8; j++) {
