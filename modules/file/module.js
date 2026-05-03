@@ -710,7 +710,7 @@
     "allowedDeepScan": false
   }, {
     "name": "Дерево устройств (DTB)",
-    "magic": parseHEX("D0 0D FEED"),
+    "magic": parseHEX("D0 0D FE ED"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
