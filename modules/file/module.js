@@ -699,8 +699,13 @@
     "offset": 0,
     "allowedDeepScan": true
   }, {
-    "name": "Загрузочный образ Android (BOOT.IMG)",
+    "name": "Загрузочный образ Android (BOOT.IMG / RECOVERY.IMG)",
     "magic": parseHEX("41 4E 44 52 4F 49 44 21"),
+    "offset": 0,
+    "allowedDeepScan": false
+  }, {
+    "name": "Настройки Android Verified Boot (VBMETA.IMG)",
+    "magic": parseHEX("41 56 42 30"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
