@@ -704,6 +704,16 @@
     "offset": 0,
     "allowedDeepScan": false
   }, {
+    "name": "Дерево устройств Android (Android DTB)",
+    "magic": parseHEX("D7 B7 AB 1E"),
+    "offset": 0,
+    "allowedDeepScan": false
+  }, {
+    "name": "Дерево устройств (DTB)",
+    "magic": parseHEX("D0 0D FEED"),
+    "offset": 0,
+    "allowedDeepScan": false
+  }, {
     "name": "Образ Android Sparse",
     "magic": parseHEX("3A FF 26 ED"),
     "offset": 0,
