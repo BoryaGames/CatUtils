@@ -718,6 +718,11 @@
     "magic": parseHEX("3A FF 26 ED"),
     "offset": 0,
     "allowedDeepScan": false
+  }, {
+    "name": "Архив (CPIO, New ASCII)",
+    "magic": parseHEX("30 37 30 37 30 31"),
+    "offset": 0,
+    "allowedDeepScan": false
   }],
   "scan": ({ file, content }, _, detailedScan) => {
     var fileObject = file.files[0];
