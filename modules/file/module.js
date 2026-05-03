@@ -693,7 +693,7 @@
         }
         target += String.fromCharCode(char);
       }
-      return `Таблица разделов Samsung (PIT)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> ${partitionCount} разделов<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Для ${target}`;
+      return `Таблица разделов Samsung (PIT)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> ${partitionsCount} разделов<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Для ${target}`;
     },
     "magic": parseHEX("76 98 34 12 ?? ?? ?? ?? 43 4F 4D 5F 54 41 52 32"),
     "offset": 0,
