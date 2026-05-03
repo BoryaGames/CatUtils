@@ -680,6 +680,25 @@
     "offset": 8,
     "allowedDeepScan": false
   }, {
+    "name": (_, result, tabLevel) => {
+      var view = new DataView(result.buffer);
+      // Читаем количество разделов
+      var partitionsCount = view.getUint32(4);
+      // Читаем цель (Project Name)
+      var target = "";
+      for (var j = 0; j < 8; j++) {
+        var char = view.getUint8(16 + j);
+        if (char === 0) {
+          break;
+        }
+        target += String.fromCharCode(char);
+      }
+      return `Таблица разделов Samsung (PIT)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> ${partitionCount} разделов<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Для ${target}`;
+    },
+    "magic": parseHEX("76 98 34 12 ?? ?? ?? ?? 43 4F 4D 5F 54 41 52 32"),
+    "offset": 0,
+    "allowedDeepScan": true
+  }, {
     "name": "Загрузочный образ Android (BOOT.IMG)",
     "magic": parseHEX("41 4E 44 52 4F 49 44 21"),
     "offset": 0,
