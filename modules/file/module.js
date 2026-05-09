@@ -815,7 +815,7 @@
             if (zip.files["mcmod.info"]) {
               result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Forge)`;
               try {
-                var mcmod = JSON.parse(await zip.files["mcmod.info"].async("string"));
+                var mcmod = JSON.parse(await zip.files["mcmod.info"].async("string"))[0];
                 if (mcmod.name || mcmod.version) {
                   result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> ${(mcmod.name || "").split("<").join("&lt;").split(">").join("&gt;")}${(mcmod.name && mcmod.version) ? " " : ""}${mcmod.version}`;
                 }
