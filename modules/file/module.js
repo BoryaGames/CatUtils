@@ -812,6 +812,21 @@
           }
           if (zip.files["META-INF/MANIFEST.MF"] && !zip.files["AndroidManifest.xml"]) {
             result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Java (JAR)`;
+            if (zip.files["mcmod.info"]) {
+              result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Forge)`;
+              try {
+                var mcmod = JSON.parse(await zip.files["mcmod.info"].async("string"));
+                if (mcmod.name || mcmod.version) {
+                  result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> ${(mcmod.name || "").split("<").join("&lt;").split(">").join("&gt;")}${(mcmod.name && mcmod.version) ? " " : ""}${mcmod.version}`;
+                }
+                if (mcmod.description) {
+                  result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> ${mcmod.description.split("<").join("&lt;").split(">").join("&gt;")}`;
+                }
+                if (mcmod.mcversion) {
+                  result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> Для версии ${mcmod.mcversion}`;
+                }
+              } catch {}
+            }
             if (zip.files["META-INF/mods.toml"]) {
               result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Forge)`;
             }
