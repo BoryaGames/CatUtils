@@ -385,7 +385,7 @@
     "magic": parseHEX("37 7A BC AF 27 1C"),
     "offset": 0
   }, {
-    "name": "Сжатые даннные (GZ)",
+    "name": "Сжатые данные (GZ)",
     "magic": parseHEX("1F 8B"),
     "offset": 0
   }, {
@@ -540,42 +540,42 @@
     "offset": 4,
     "allowedDeepScan": false
   }, {
-    "name": (_, _2, tabLevel) => `Сжатые даннные (ZLIB)<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> Без сжатия<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> Без словаря`,
+    "name": (_, _2, tabLevel) => `Сжатые данные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Без сжатия<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Без словаря`,
     "magic": parseHEX("78 01"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": (_, _2, tabLevel) => `Сжатые даннные (ZLIB)<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> Минимальное сжатие<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> Без словаря`,
+    "name": (_, _2, tabLevel) => `Сжатые данные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Минимальное сжатие<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Без словаря`,
     "magic": parseHEX("78 5E"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": (_, _2, tabLevel) => `Сжатые даннные (ZLIB)<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> Стандартное сжатие<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> Без словаря`,
+    "name": (_, _2, tabLevel) => `Сжатые данные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Стандартное сжатие<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Без словаря`,
     "magic": parseHEX("78 9C"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": (_, _2, tabLevel) => `Сжатые даннные (ZLIB)<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> Максимальное сжатие<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> Без словаря`,
+    "name": (_, _2, tabLevel) => `Сжатые данные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Максимальное сжатие<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Без словаря`,
     "magic": parseHEX("78 DA"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": (_, _2, tabLevel) => `Сжатые даннные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Без сжатия<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> С словарём`,
+    "name": (_, _2, tabLevel) => `Сжатые данные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Без сжатия<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> С словарём`,
     "magic": parseHEX("78 20"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": (_, _2, tabLevel) => `Сжатые даннные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Минимальное сжатие<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> С словарём`,
+    "name": (_, _2, tabLevel) => `Сжатые данные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Минимальное сжатие<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> С словарём`,
     "magic": parseHEX("78 7D"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": (_, _2, tabLevel) => `Сжатые даннные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Стандартное сжатие<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> С словарём`,
+    "name": (_, _2, tabLevel) => `Сжатые данные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Стандартное сжатие<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> С словарём`,
     "magic": parseHEX("78 BB"),
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": (_, _2, tabLevel) => `Сжатые даннные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Максимальное сжатие<br />${"&nbsp;".repeat(tabLevel)}<font style="color: lime;">╰┈➤</font> С словарём`,
+    "name": (_, _2, tabLevel) => `Сжатые данные (ZLIB)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Максимальное сжатие<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> С словарём`,
     "magic": parseHEX("78 F9"),
     "offset": 0,
     "allowedDeepScan": false
@@ -867,13 +867,13 @@
       try {
         var manifest = plist.parse(await getEntry("BuildManifest.plist").getData(new zip.TextWriter));
         if (manifest.ProductVersion) {
-          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Версия ${manifest.ProductVersion}${(Array.isArray(manifest.BuildIdentities) && manifest.BuildIdentities[0] && manifest.BuildIdentities[0]["Ap,OSLongVersion"]) ? ` (${manifest.BuildIdentities[0]["Ap,OSLongVersion"]})` : ""}`;
+          result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Версия ${manifest.ProductVersion}${(Array.isArray(manifest.BuildIdentities) && manifest.BuildIdentities[0] && manifest.BuildIdentities[0]["Ap,OSLongVersion"]) ? ` (${manifest.BuildIdentities[0]["Ap,OSLongVersion"]})` : ""}`;
         }
         if (manifest.ProductBuildVersion) {
-          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Сборка ${manifest.ProductBuildVersion}`;
+          result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Сборка ${manifest.ProductBuildVersion}`;
         }
         if (Array.isArray(manifest.SupportedProductTypes)) {
-          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Для: ${manifest.SupportedProductTypes.join(", ")}`;
+          result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Для: ${manifest.SupportedProductTypes.join(", ")}`;
         }
       } catch {}
     } else if (getEntry("Restore.plist")) {
@@ -881,13 +881,13 @@
       try {
         var manifest = plist.parse(await getEntry("Restore.plist").getData(new zip.TextWriter));
         if (manifest.ProductVersion) {
-          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Версия ${manifest.ProductVersion}`;
+          result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Версия ${manifest.ProductVersion}`;
         }
         if (manifest.ProductBuildVersion) {
-          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Сборка ${manifest.ProductBuildVersion}`;
+          result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Сборка ${manifest.ProductBuildVersion}`;
         }
         if (manifest.ProductType) {
-          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Для: ${manifest.ProductType}`;
+          result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Для: ${manifest.ProductType}`;
         }
       } catch {}
     }
