@@ -871,6 +871,20 @@
           result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Для: ${manifest.SupportedProductTypes.join(", ")}`;
         }
       } catch {}
+    } else if (getEntry("Restore.plist")) {
+      result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является прошивкой для устройств Apple (IPSW)`;
+      try {
+        var manifest = plist.parse(await getEntry("Restore.plist").getData(new zip.TextWriter));
+        if (manifest.ProductVersion) {
+          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Версия ${manifest.ProductVersion}${(Array.isArray(manifest.BuildIdentities) && manifest.BuildIdentities[0] && manifest.BuildIdentities[0]["Ap,OSLongVersion"]) ? ` (${manifest.BuildIdentities[0]["Ap,OSLongVersion"]})` : ""}`;
+        }
+        if (manifest.ProductBuildVersion) {
+          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Сборка ${manifest.ProductBuildVersion}`;
+        }
+        if (manifest.ProductType) {
+          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Для: ${manifest.ProductType}`;
+        }
+      } catch {}
     }
     if (entries.find(entry => entry.filename.endsWith(".dist-info"))) {
       result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является модулем Python (WHL)`;
