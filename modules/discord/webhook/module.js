@@ -10,7 +10,7 @@
     <button data-call="delete">Удалить</button>
   `,
   "check": async ({ url, outputData }) => {
-    if (!url.value.match(/^https?:\/\/discord\.com\/api(?:\/v\d+)\/webhooks\/(\d+)\/([a-z0-9_-]+)$/)) {
+    if (!url.value.match(/^https?:\/\/discord\.com\/api(?:\/v\d+)?\/webhooks\/(\d+)\/([a-z0-9_-]+)$/i)) {
       outputData.innerHTML = `Это <font color="red">не выглядит</font> как верная ссылка на вебхук Discord.`;
       return;
     }
@@ -35,7 +35,7 @@
     outputData.innerHTML = `Вы получили <font color="red">неизвестную ошибку</font>.`;
   },
   "delete": async ({ url, outputData }) => {
-    if (!url.value.match(/^https?:\/\/discord\.com\/api(?:\/v\d+)\/webhooks\/(\d+)\/([a-z0-9_-]+)$/)) {
+    if (!url.value.match(/^https?:\/\/discord\.com\/api(?:\/v\d+)?\/webhooks\/(\d+)\/([a-z0-9_-]+)$/i)) {
       outputData.innerHTML = `Это <font color="red">не выглядит</font> как верная ссылка на вебхук Discord.`;
       return;
     }
