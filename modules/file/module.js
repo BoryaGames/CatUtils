@@ -785,89 +785,96 @@
     link.click();
     URL.revokeObjectURL(url);
   },
-  "parseZip": (fileObject, _, tabLevel, detailedScan) => {
-    if (!detailedScan) {
-      return {
-        "name": "Архив (ZIP)",
-        "wantsDetailedScan": true
-      };
+  "parseZip": async (fileObject, _, tabLevel, detailedScan) => {
+    var reader = new zip.ZipReader(new zip.BlobReader(fileObject));
+    console.log(reader);
+    var entries = await reader.getEntries();
+    console.log(entries);
+    function getEntry(filename) {
+      return entries.find(entry => entry.filename == filename);
     }
-    return new Promise(res => {
-      var fr = new FileReader();
-      fr.onload = async () => {
-        if (fr.readyState == 2) {
-          var zip = await JSZip.loadAsync(fr.result);
-          console.log(zip);
-          var result = "Архив (ZIP)";
-          if (zip.files["AndroidManifest.xml"] && zip.files["classes.dex"]) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Android (APK)`;
-          }
-          if (zip.files["manifest.json"]) {
-            try {
-              var manifest = JSON.parse(await zip.files["manifest.json"].async("string"));
-              if (manifest.xapk_version) {
-                result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Android (XAPK)`;
-              }
-            } catch {}
-          }
-          if (zip.files["META-INF/MANIFEST.MF"] && !zip.files["AndroidManifest.xml"]) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Java (JAR)`;
-            if (zip.files["mcmod.info"]) {
-              result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Forge)`;
-              try {
-                var mcmod = JSON.parse(await zip.files["mcmod.info"].async("string"))[0];
-                if (mcmod.name || mcmod.version) {
-                  result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> ${(mcmod.name || "").split("<").join("&lt;").split(">").join("&gt;")}${(mcmod.name && mcmod.version) ? " " : ""}${mcmod.version}`;
-                }
-                if (mcmod.description) {
-                  result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> ${mcmod.description.split("<").join("&lt;").split(">").join("&gt;")}`;
-                }
-                if (mcmod.mcversion) {
-                  result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> Для версии ${mcmod.mcversion}`;
-                }
-              } catch {}
-            }
-            if (zip.files["META-INF/mods.toml"]) {
-              result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Forge)`;
-            }
-            if (zip.files["fabric.mod.json"]) {
-              result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Fabric)`;
-            }
-          }
-          if (zip.files["[Content_Types].xml"] && zip.files["word"] && zip.files["_rels"]) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft Word (DOCX)`;
-          }
-          if (zip.files["[Content_Types].xml"] && zip.files["xl"]) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft Excel (XLSX)`;
-          }
-          if (zip.files["[Content_Types].xml"] && zip.files["ppt"]) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft PowerPoint (PPTX)`;
-          }
-          if (zip.files["[Content_Types].xml"] && zip.files["AppxManifest.xml"]) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является UWP-приложением Windows (APPX)`;
-          }
-          if (zip.files["[Content_Types].xml"] && zip.files["AppxMetadata/AppxBundleManifest.xml"]) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является пакетом UWP-приложений Windows (MSIXBUNDLE)`;
-          }
-          if (zip.files["mimetype"]) {
-            try {
-              var mimetype = await zip.files["mimetype"].async("string");
-              if (mimetype == "application/epub+zip") {
-                result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является книгой (EPUB)`;
-              }
-            } catch {}
-          }
-          if (zip.files["Payload"]) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением iOS (IPA)`;
-          }
-          if (Object.keys(zip.files).find(file => file.endsWith(".dist-info"))) {
-            result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является модулем Python (WHL)`;
-          }
-          res(result);
+    var result = "Архив (ZIP)";
+    if (getEntry("AndroidManifest.xml") && getEntry("classes.dex")) {
+      result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Android (APK)`;
+    }
+    if (getEntry("manifest.json")) {
+      try {
+        var manifest = JSON.parse(await getEntry("manifest.json").getData(new zip.TextWriter));
+        if (manifest.xapk_version) {
+          result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Android (XAPK)`;
         }
-      };
-      fr.readAsArrayBuffer(fileObject);
-    });
+      } catch {}
+    }
+    if (getEntry("META-INF/MANIFEST.MF") && !getEntry("AndroidManifest.xml")) {
+      result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением Java (JAR)`;
+      if (getEntry("mcmod.info")) {
+        result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Forge)`;
+        try {
+          var mcmod = JSON.parse(await getEntry("mcmod.info").getData(new zip.TextWriter))[0];
+          if (mcmod.name || mcmod.version) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> ${(mcmod.name || "").split("<").join("&lt;").split(">").join("&gt;")}${(mcmod.name && mcmod.version) ? " " : ""}${mcmod.version}`;
+          }
+          if (mcmod.description) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> ${mcmod.description.split("<").join("&lt;").split(">").join("&gt;")}`;
+          }
+          if (mcmod.mcversion) {
+            result += `<br />${"&nbsp;".repeat(tabLevel + 12)}<font style="color: lime;">╰┈➤</font> Для версии ${mcmod.mcversion}`;
+          }
+        } catch {}
+      }
+      if (getEntry("META-INF/mods.toml")) {
+        result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Forge)`;
+      }
+      if (getEntry("fabric.mod.json")) {
+        result += `<br />${"&nbsp;".repeat(tabLevel + 8)}<font style="color: lime;">╰┈➤</font> Является модом Minecraft (Fabric)`;
+      }
+    }
+    if (getEntry("[Content_Types].xml")) {
+      if (getEntry("word") && getEntry("_rels")) {
+        result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft Word (DOCX)`;
+      }
+      if (getEntry("xl")) {
+        result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft Excel (XLSX)`;
+      }
+      if (getEntry("ppt")) {
+        result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft PowerPoint (PPTX)`;
+      }
+      if (getEntry("AppxManifest.xml")) {
+        result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является UWP-приложением Windows (APPX)`;
+      }
+      if (getEntry("AppxMetadata/AppxBundleManifest.xml")) {
+        result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является пакетом UWP-приложений Windows (MSIXBUNDLE)`;
+      }
+    }
+    if (getEntry("mimetype")) {
+      try {
+        var mimetype = await getEntry("mimetype").getData(new zip.TextWriter);
+        if (mimetype == "application/epub+zip") {
+          result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является книгой (EPUB)`;
+        }
+      } catch {}
+    }
+    if (getEntry("Payload")) {
+      result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является приложением iOS (IPA)`;
+    }
+    if (getEntry("BuildManifest.plist")) {
+      result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является прошивкой для устройств Apple (IPSW)`;
+      try {
+        var manifest = plist.parse(await getEntry("BuildManifest.plist").getData(new zip.TextWriter));
+        if (manifest.ProductVersion) {
+          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Версия ${manifest.ProductVersion}${(Array.isArray(manifest.BuildIdentities) && manifest.BuildIdentities[0] && manifest.BuildIdentities[0]["Ap,OSLongVersion"]) ? ` (${manifest.BuildIdentities[0]["Ap,OSLongVersion"]})` : ""}`;
+        }
+        if (manifest.ProductBuildVersion) {
+          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Сборка ${manifest.ProductBuildVersion}`;
+        }
+        if (Array.isArray(manifest.SupportedProductTypes)) {
+          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Для: ${manifest.SupportedProductTypes.join(", ")}`;
+        }
+      } catch {}
+    }
+    if (entries.find(entry => entry.filename.endsWith(".dist-info"))) {
+      result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является модулем Python (WHL)`;
+    }
+    return result;
   }
-
 })
