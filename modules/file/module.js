@@ -590,6 +590,11 @@
     "offset": 0,
     "allowedDeepScan": false
   }, {
+    "name": "Зашифрованный образ диска (DMG)",
+    "magic": parseHEX("65 6E 63 72 63 64 73 61"),
+    "offset": 0,
+    "allowedDeepScan": true
+  }, {
     "name": "Зашифрованные данные (PGP)",
     "magic": parseHEX("85 ?? ?? 03"),
     "offset": 0,
