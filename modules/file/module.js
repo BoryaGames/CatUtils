@@ -733,6 +733,14 @@
     "magic": parseHEX("30 37 30 37 30 31"),
     "offset": 0,
     "allowedDeepScan": false
+  }, {
+    "name": ({ fileObject }) => {
+      currentElement.plist = fileObject;
+      return `Конфигурация в двоичном формате (PLIST)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> XML-версия <button data-call="downloadXmlPlist">Скачать</button>`
+    },
+    "magic": parseHEX("62 70 6C 69 73 74 30 30"),
+    "offset": 0,
+    "allowedDeepScan": true
   }],
   "scan": ({ file, content }, _, detailedScan) => {
     var fileObject = file.files[0];
@@ -786,9 +794,26 @@
     var url = URL.createObjectURL(blob);
     var link = document.createElement("a");
     link.href = url;
-    link.download = `comet_installer_latest.exe_cert${id + 1}.p7b`;
+    link.download = `cert${id + 1}.p7b`;
     link.click();
     URL.revokeObjectURL(url);
+  },
+  "downloadXmlPlist": (_, event) => {
+    var fr = new FileReader;
+    fr.onload = async () => {
+      if (fr.readyState == 2) {
+        var blob = new Blob([plist.build(plist.parse(fr.result))], {
+          "type": "application/xml"
+        });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement("a");
+        link.href = url;
+        link.download = "output.plist";
+        link.click();
+        URL.revokeObjectURL(url);
+      }
+    };
+    fr.readAsArrayBuffer(currentElement.plist);
   },
   "parseZip": async (fileObject, _, tabLevel, detailedScan) => {
     var reader = new zip.ZipReader(new zip.BlobReader(fileObject));
