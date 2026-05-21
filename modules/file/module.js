@@ -876,7 +876,7 @@
       try {
         var manifest = plist.parse(await getEntry("Restore.plist").getData(new zip.TextWriter));
         if (manifest.ProductVersion) {
-          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Версия ${manifest.ProductVersion}${(Array.isArray(manifest.BuildIdentities) && manifest.BuildIdentities[0] && manifest.BuildIdentities[0]["Ap,OSLongVersion"]) ? ` (${manifest.BuildIdentities[0]["Ap,OSLongVersion"]})` : ""}`;
+          result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Версия ${manifest.ProductVersion}`;
         }
         if (manifest.ProductBuildVersion) {
           result += `<br />${"&nbsp;".repeat(tabLevel + 6)}<font style="color: lime;">╰┈➤</font> Сборка ${manifest.ProductBuildVersion}`;
