@@ -734,7 +734,7 @@
     "offset": 0,
     "allowedDeepScan": false
   }, {
-    "name": ({ fileObject }) => {
+    "name": ({ fileObject, tabLevel }) => {
       currentElement.plist = fileObject;
       return `Конфигурация в двоичном формате (PLIST)<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> XML-версия <button data-call="downloadXmlPlist">Скачать</button>`
     },
