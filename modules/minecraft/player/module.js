@@ -33,7 +33,7 @@
         "skin": result.data.player.skin_texture,
         "cape": result.data.player.cape_texture,
         // Пасхалка
-        "ears": (result.data.player.username == "deadmau5")
+        "ears": (result.data.player.username == "deadmau5" ? "current-skin" : false)
       });
     }
     if (player.value.match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-5][0-9a-f]{3}-?[089ab][0-9a-f]{3}-?[0-9a-f]{12}$/i)) {
