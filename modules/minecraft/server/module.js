@@ -8,7 +8,7 @@
     <img src="download.png" width="32px" height="32px">
     <br />
     <p id="outputData" style="color: white;">(Информации нет.)</p>
-    <img width="64px" height="64px" id="icon" />
+    <img width="64px" height="64px" id="icon" style="display: none;" />
     <br /><br /><br />
     <button data-call="load">Загрузить</button>
   `,
@@ -29,7 +29,7 @@
       outputData.innerHTML = `<font color="red">Не удалось</font> получить информацию.`;
       return;
     }
-    outputData.innerHTML = `Сервер: <font color="lime">${result.ip}</font>${result.hostname ? ` (<font color="lime">${result.hostname}</font>)` : ""}<br />Статус: ${result.online ? `<font color="lime">Онлайн</font>` : `<font color="red">Оффлайн</font>`}<br />Версия: <font color="lime">${result.version}</font>${result.software ? `<br />Ядро: <font color="lime">${result.software}</font>` : ""}<br />Игроки: <font color="lime">${result.players.online} / ${result.players.max}</font>`;
+    outputData.innerHTML = `Сервер: <font color="lime">${result.ip}</font>${result.hostname ? ` (<font color="lime">${result.hostname}</font>)` : ""}<br />Статус: ${result.online ? `<font color="lime">Онлайн</font>` : `<font color="red">Оффлайн</font>`}<br />Версия: <font color="lime">${result.version}</font>${result.software ? `<br />Ядро: <font color="lime">${result.software}</font>` : ""}${result.players ? `<br />Игроки: <font color="lime">${result.players.online} / ${result.players.max}</font>` : ""}`;
     if (result.icon) {
       icon.style.display = "block";
       icon.src = result.icon;
