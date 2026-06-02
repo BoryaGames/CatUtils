@@ -20,9 +20,13 @@
       return;
     }
     if (result.success) {
-      outputData.innerHTML = `Игрок <font color="lime">${result.data.player.username}</font> с UUID <font color="lime"><font color="lime">${result.data.player.id}</font> существует.`;
+      outputData.innerHTML = `Игрок <font color="lime">${result.data.player.username}</font> с UUID <font color="lime">${result.data.player.id}</font> существует.`;
       return;
     }
-    outputData.innerHTML = `Игрока с таким никнеймом или UUID <font color="red">не существует</font> (скорее всего, такой никнейм свободен).`;
+    if (player.value.match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-5][0-9a-f]{3}-?[089ab][0-9a-f]{3}-?[0-9a-f]{12}$/i)) {
+      outputData.innerHTML = `Игрока с таким UUID <font color="red">не существует</font>.`;
+    } else {
+      outputData.innerHTML = `Игрока с таким никнеймом <font color="red">не существует</font> (скорее всего, такой никнейм свободен).`;
+    }
   }
 })
