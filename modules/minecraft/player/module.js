@@ -11,7 +11,7 @@
   `,
   "load": async ({ player, outputData, skin }) => {
     outputData.innerHTML = `<font color="yellow">Загрузка...</font>`;
-	  skin.style.display = "none";
+    skin.style.display = "none";
     try {
       var result = await fetch(`https://playerdb.co/api/player/minecraft/${player.value}`, {
         "headers": {
@@ -24,15 +24,15 @@
     }
     if (result.success) {
       outputData.innerHTML = `Игрок <font color="lime">${result.data.player.username}</font> с UUID <font color="lime">${result.data.player.id}</font> существует.`;
-	    skin.style.display = "block";
+      skin.style.display = "block";
       return new skinview3d.SkinViewer({
-		    "canvas": skin,
-		    "width": 300,
-		    "height": 400,
+        "canvas": skin,
+        "width": 300,
+        "height": 400,
         "nameTag": result.data.player.username,
-		    "skin": result.data.player.skin_texture,
-		    "cape": result.data.player.cape_texture
-	    });
+        "skin": result.data.player.skin_texture,
+        "cape": result.data.player.cape_texture
+      });
     }
     if (player.value.match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-5][0-9a-f]{3}-?[089ab][0-9a-f]{3}-?[0-9a-f]{12}$/i)) {
       outputData.innerHTML = `Игрока с таким UUID <font color="red">не существует</font>.`;
