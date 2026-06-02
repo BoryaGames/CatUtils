@@ -14,9 +14,10 @@
         "headers": {
           "User-Agent": "CatUtils (https://catutils.topcatto.xyz, v0.0.1)"
         }
-      }).then(res => res.body());
+      }).then(res => res.json());
     } catch {
       outputData.innerHTML = `<font color="red">Не удалось</font> получить информацию.`;
+      return;
     }
     if (result.success) {
       outputData.innerHTML = `Игрок <font color="lime">${result.data.player.username}</font> с UUID <font color="lime"><font color="lime">${result.data.player.id}</font> существует.`;
