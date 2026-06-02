@@ -24,8 +24,8 @@
     }
     if (result.success) {
       outputData.innerHTML = `Игрок <font color="lime">${result.data.player.username}</font> с UUID <font color="lime">${result.data.player.id}</font> существует.`;
-      skin.style.display = "block";
-      skin.src = result.data.player.avatar;
+      avatar.style.display = "block";
+      avatar.src = result.data.player.avatar;
       return;
     }
     if (player.value.match(/^[0-9a-f]{8}-?[0-9a-f]{4}-?[0-5][0-9a-f]{3}-?[089ab][0-9a-f]{3}-?[0-9a-f]{12}$/i)) {
