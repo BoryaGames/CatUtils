@@ -5,7 +5,7 @@
     <img src="download.png" width="32px" height="32px">
     <br>
     <p id="outputData" style="color: white;">(Информации нет.)</p>
-    <canvas id="avatar" width="300px" height="400px" style="display: none;"></canvas>
+    <img id="avatar" width="300px" height="300px" style="display: none;"></canvas>
     <br><br><br>
     <button data-call="load">Загрузить</button>
   `,
