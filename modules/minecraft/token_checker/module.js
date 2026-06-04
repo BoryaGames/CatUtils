@@ -36,9 +36,9 @@
       return;
     }
     var status = "";
-    if (Date.now() > metadata.exp) {
+    if (Date.now() > (metadata.exp * 1000)) {
       status = `Этот токен <font color="red">устарел</font>.`;
-    } else if (Date.now() < metadata.nbf) {
+    } else if (Date.now() < (metadata.nbf * 1000)) {
       status = `На устройстве <font color="yellow">неправильное время</font>, невозможно проверить токен.`;
     } else {
       status = `Этот токен <font color="lime">активен</font>.`;
