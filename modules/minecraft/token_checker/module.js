@@ -43,6 +43,6 @@
     } else {
       status = `Этот токен <font color="lime">активен</font>.`;
     }
-    outputData.innerHTML = `Это выглядит как <font color="lime">возможный</font> токен доступа Minecraft.<br />Игрок: <font color="lime">${mcProfile.name}</font> (<font color="lime">${mcProfile.id}</font>)<br />Платформа: ${metadata.platform}<br />Токен сгенерирован: ${(new Date(metadata.iat * 1000)).toLocaleString()}<br />Токен истекает: ${(new Date(metadata.exp * 1000)).toLocaleString()}<br />` + status;
+    outputData.innerHTML = `Это выглядит как <font color="lime">возможный</font> токен доступа Minecraft.<br />Игрок: <font color="lime">${mcProfile.name}</font> (<font color="lime">${mcProfile.id}</font>)<br />Платформа: <font color="lime">${metadata.platform}</font><br />Токен сгенерирован: <font color="lime">${(new Date(metadata.iat * 1000)).toLocaleString()}</font><br />Токен истекает: <font color="lime">${(new Date(metadata.exp * 1000)).toLocaleString()}</font><br />` + status;
   }
 })
