@@ -18,7 +18,7 @@
     var numBlocks = Math.floor(numBytes / 4);
     var dataView = new DataView(keyBytes.buffer, keyBytes.byteOffset);
     for (var i = 0; i < numBlocks; i++) {
-      const blockOffset = i * 4;
+      var blockOffset = i * 4;
       let k1 = dataView.getUint32(blockOffset, true);
       k1 = Math.imul(k1, 0xcc9e2d51);
       k1 = (k1 << 15) | (k1 >>> 17);
