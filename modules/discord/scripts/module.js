@@ -32,11 +32,18 @@
     </div>
     <br />
     <br />
+    <div>
+      <h2 style="color: white;">Доступ к редактору виджетов</h2>
+      <textarea placeholder="Скрипт" readonly>let _mods=webpackChunkdiscord_developers.push([[Symbol()],{},e=>e.c]);webpackChunkdiscord_developers.pop();let findByProps=(...e)=>{for(let r of Object.values(_mods))try{if(!r.exports||r.exports===window)continue;if(e.every(e=>r.exports?.[e]))return r.exports;for(let o in r.exports)if(e.every(e=>r.exports?.[o]?.[e])&&"IntlMessagesProxy"!==r.exports[o][Symbol.toStringTag])return r.exports[o]}catch{}};findByProps("getAll").getAll().find(e=>"ApexExperimentStore"===e.getName()).createOverride("2026-03-widget-config-editor",1)</textarea>
+      <br><br>
+      <button data-call="copy">Копировать</button>
+    </div>
+    <br />
+    <br />
   `,
   "copy": (_, event) => {
     navigator.clipboard.writeText(event.target.parentElement.querySelector("textarea").value);
   }
-
 })
 
 
