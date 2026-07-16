@@ -860,13 +860,13 @@
       }
     }
     if (getEntry("[Content_Types].xml")) {
-      if (getEntry("word") && getEntry("_rels")) {
+      if (getEntry("word/document.xml") && getEntry("_rels/.rels")) {
         result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft Word (DOCX)`;
       }
-      if (getEntry("xl")) {
+      if (getEntry("xl/styles.xml")) {
         result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft Excel (XLSX)`;
       }
-      if (getEntry("ppt")) {
+      if (getEntry("ppt/presentation.xml")) {
         result += `<br />${"&nbsp;".repeat(tabLevel + 4)}<font style="color: lime;">╰┈➤</font> Является документом Microsoft PowerPoint (PPTX)`;
       }
       if (getEntry("AppxManifest.xml")) {
